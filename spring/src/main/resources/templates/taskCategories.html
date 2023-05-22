@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  layout:decorate="layout/layout">
+<div layout:fragment="content">
+    <div class="container" style="min-height: 500px;">
+
+        <div class="row mt-3">
+            <div class="col-12">
+              <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#addModal">+ADD CATEGORY</button>
+                <div class="modal" tabindex="-1" id="addModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">New Category</h5>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/addTaskCategory" method="post">
+                                    <div class="form-group">
+                                        <label>CODE:</label>
+                                        <input type="text" name="code" class ="form-control">
+                                        <br>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>NAME:</label>
+                                        <input type="text" name="name" class ="form-control">
+                                        <br>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-danger">Add</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row"><p></div>
+                <table class="table">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>#</th>
+                        <th>CODE</th>
+                        <th>NAME</th>
+                        <th>OPERATIONS</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each = "c : ${categories}">
+                            <td th:text="${c.getId()}"></td>
+                            <td th:text="${c.getCode()}"></td>
+                            <td th:text="${c.getName()}"></td>
+                            <td style="display: flex;">
+                                <!-- DELETE M0dal -->
+                                <button type="button" class="btn btn-danger btn-sm me-md-2" data-toggle="modal"
+                                        th:attr="data-target='#deleteModal'+*{c.getId()}">
+                                    DELETE
+                                </button>
+                                <form action="/deleteTaskCategory" method="post">
+                                    <input type="hidden" name="id" th:value="${c.getId()}">
+                                    <div class="modal fade" th:id="*{'deleteModal'+{c.getId()}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-body" >
+                                                    Are you sure  you want to delete <span th:text=" ${c.getName()}"></span>?
+                                                    It will delete all tasks in this category
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-danger">Yes</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- EDIT Modal -->
+                                <button type="button" class="btn btn-danger btn-sm me-md-2" data-toggle="modal"
+                                        th:attr="data-target='#editModal'+*{c.getId()}">EDIT</button>
+                                <div class="modal" tabindex="-1" th:id="*{'editModal'+{c.getId()}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit Category</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="/editTaskCategory"  method="post">
+                                                    <input type="hidden" name="id" th:value="${c.getId()}">
+                                                    <div class="form-group">
+                                                        <label>CODE:</label>
+                                                        <input type="text" name="code" class ="form-control" th:value="${c.getCode()}">
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>NAME:</label>
+                                                        <input type="text" name="name" class ="form-control"  th:value="${c.getName()}">
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-danger">Save Changes</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</html>

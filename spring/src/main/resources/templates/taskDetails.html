@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  layout:decorate="layout/layout">
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="jumbotron">
+                    <h1 class="display-4" th:text="${task.getTitle()}"></h1>
+                    <p class="lead" th:text="${task.getDescription()}"></p>
+                    <span class="badge bg-dark" th:text="${task.getStatus().getName()}"></span> <span class="badge bg-secondary"  th:text="${task.getCategory().getName()}"></span>
+                    <hr class="my-4">
+                    <!--EDIT modal-->
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#editModal">EDIT</button>
+                    <div class="modal" tabindex="-1" id="editModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Task</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/editTask" method="post">
+                                        <input type="hidden" name="id" th:value="${task.getId()}">
+                                        <div class="form-group">
+                                            <label>Title:</label>
+                                            <input type="text" name="title" class ="form-control" th:value="${task.getTitle()}">
+                                            <br>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Category:</label>
+                                            <select name="category" class="form-select">
+                                                <option th:each="c : ${categories}"
+                                                        th:text="${c.getName()} + '/' + ${c.getCode()}"
+                                                        th:value="${c.getId()}"
+                                                th:selected="${c.getId()==task.getCategory().getId()}">
+                                                </option>
+                                            </select>
+                                            <br>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Description:</label>
+                                            <textarea name="description" class ="form-control"  required style="height: 300px" th:text="${task.getDescription()}"></textarea>
+                                            <br>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Status:</label>
+                                            <select name="status" class="form-select">
+                                                <option th:each="s : ${statuses}"
+                                                        th:text="${s.getName()} + '/' + ${s.getCode()}"
+                                                        th:value="${s.getId()}"
+                                                        th:selected="${s.getId()==task.getStatus().getId()}">
+                                                </option>
+                                            </select>
+                                            <br>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-danger">Save Changes</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- DELETE modal -->
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal">
+                        DELETE
+                    </button>
+                    <form action="/deleteTask" method="post">
+                        <input type="hidden" name="id" th:value="${task.getId()}">
+                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        Are you sure  you want to delete <span th:text="${task.getTitle()}"></span> task?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-danger">Yes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
+                </div>
+
+                    <div class="shadow-none p-3 mb-5 bg-light rounded">
+                        <form action="/addComment" method="post">
+                            <input type="hidden" name="taskId" th:value="${task.getId()}">
+                        <textarea class="form-control" name="text" placeholder="Write a comment"></textarea>
+                        <button type="submit" class="btn btn-danger mt-3">ADD COMMENT</button>
+                        </form>
+                    </div>
+
+                <div th:each="co: ${comments}">
+                <div class="card">
+                    <div class="card-header" th:text="${co.getDate()}">
+                    </div>
+                    <div class="card-body">
+                        <blockquote class="blockquote mb-0">
+                            <p th:text="${co.getText()}"></p>
+                        </blockquote>
+                    </div>
+                </div>
+                <div class="row"><p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

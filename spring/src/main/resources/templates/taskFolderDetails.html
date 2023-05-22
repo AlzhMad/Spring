@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  layout:decorate="layout/layout">
+<div layout:fragment="content">
+    <div class="container" style="min-height: 500px;">
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="jumbotron">
+                    <h1 class="display-4" th:text="${folder.getName()}"></h1>
+                    <p class="lead" th:text="${folder.getDescription()}"></p>
+                    <div class="row"><p></div>
+                    <ul class="nav">
+                        <li class="nav-item" th:each="c:${folder.getCategories()}">
+                            <form action="/deleteCategoryFromTaskFolder" method="post">
+                                <input type="hidden" name="taskFolderId" th:value="${folder.getId()}">
+                                <input type="hidden" name="taskCategory" th:value="${c.getId()}">
+                                <span class="badge bg-dark me-md-1" ><span th:text="${c.getName()}"></span><button type="submit" class="btn badge btn-dark">x</button></span>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button"  class="btn badge btn-danger" data-toggle="modal" data-target="#addCategoryModal">
+                                +Add Category
+                            </button>
+                            <form action="/addCategoryToTaskFolder" method="post">
+                                <input type="hidden" name="taskFolderId" th:value="${folder.getId()}">
+                                <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                    <label>Category:</label>
+                                                    <select name="taskCategory" class="form-select">
+                                                        <option th:each="ca : ${categories}"
+                                                                th:text="${ca.getName()} + '/' + ${ca.getCode()}"
+                                                                th:value="${ca.getId()}">
+                                                        </option>
+                                                    </select>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-danger">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
+
+                <div class="row"><p></div>
+                <table class="table">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>#</th>
+                        <th>TITLE</th>
+                        <th>CATEGORY</th>
+                        <th>STATUS</th>
+                        <th>DETAILS</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each = "t : ${taski}">
+                        <td th:text="${t.getId()}"></td>
+                        <td th:text="${t.getTitle()}"></td>
+                        <td th:text="${t.getCategory().getName()}"></td>
+                        <td th:text="${t.getStatus().getName()}"></td>
+                        <td>
+                            <a th:href="${'/taskDetails/'+t.getId()}" class="btn btn-danger btn-sm">DETAILS</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  layout:decorate="layout/layout">
+<div layout:fragment="content">
+  <div class="container" style="min-height: 500px;">
+
+    <div class="row mt-3">
+      <div class="col-12">
+        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#addModal">+ADD TASK</button>
+        <div class="modal" tabindex="-1" id="addModal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">New Task</h5>
+              </div>
+              <div class="modal-body">
+                <form action="/addTask" method="post">
+                  <div class="form-group">
+                    <label>Title:</label>
+                    <input type="text" name="title" class ="form-control">
+                    <br>
+                  </div>
+                  <div class="form-group">
+                    <label>Category:</label>
+                    <select name="category" class="form-select">
+                    <option th:each="c : ${categories}"
+                            th:text="${c.getName()} + '/' + ${c.getCode()}"
+                            th:value="${c.getId()}">
+                    </option>
+                    </select>
+                    <br>
+                  </div>
+                  <div class="form-group">
+                    <label>Description:</label>
+                    <textarea name="description" class ="form-control"  required style="height: 300px"></textarea>
+                    <br>
+                  </div>
+                  <div class="form-group">
+                    <label>Status:</label>
+                      <select name="status" class="form-select">
+                        <option th:each="s : ${statuses}"
+                                th:text="${s.getName()} + '/' + ${s.getCode()}"
+                                th:value="${s.getId()}"
+                                th:selected="${s.getCode().equalsIgnoreCase('ToDO')}">
+                        </option>
+                      </select>
+                     <br>
+                  </div>
+                  <div class="form-group">
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-danger">Add</button>
+                        </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row"><p></div>
+        <table class="table">
+          <thead class="thead-light">
+          <tr>
+            <th>#</th>
+            <th>TITLE</th>
+            <th>CATEGORY</th>
+            <th>STATUS</th>
+            <th>DETAILS</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each = "t : ${taski}">
+            <td th:text="${t.getId()}"></td>
+            <td th:text="${t.getTitle()}"></td>
+            <td th:text="${t.getCategory().getName()}"></td>
+            <td th:text="${t.getStatus().getName()}"></td>
+            <td>
+              <a th:href="${'/taskDetails/'+t.getId()}" class="btn btn-danger btn-sm">DETAILS</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+</html>

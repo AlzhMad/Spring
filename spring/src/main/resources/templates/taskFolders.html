@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  layout:decorate="layout/layout">
+<div layout:fragment="content">
+<div class="container" style="min-height: 500px;">
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#addModal">+ADD FOLDER</button>
+            <div class="modal" tabindex="-1" id="addModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">New Folder</h5>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/addTaskFolder" method="post">
+                                <div class="form-group">
+                                    <label>Name:</label>
+                                    <input type="text" name="name" class ="form-control">
+                                    <br>
+                                </div>
+                                <div class="form-group">
+                                    <label>Description:</label>
+                                    <input type="text" name="description" class ="form-control">
+                                    <br>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-danger">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"><p></div>
+            <div th:each="f:${folders}">
+            <div class="card" >
+                <div class="container">
+                    <h1 class="display-6" th:text="${f.getName()}"></h1>
+                    <p class="lead" th:text="${f.getDescription()}"></p>
+                    <a th:href="${'/taskFolderDetails/'+f.getId()}"class="btn btn-danger btn-sm">View</a></p>
+                </div>
+            </div>
+            <div class="row"><p></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</html>
